@@ -37,7 +37,7 @@ class Test():
         start = timeit.default_timer()
         self.name +=10
         teklif = Teklif(name=self.name,num=num)
-        for i in range(50000):
+        for i in range(500):
             array1=np.array([[1,2,3],[4,5,6],[7,8,9],[7,8,9],[7,8,9]],ndmin=5)  
             array2=np.array([[9,8,7],[6,5,4],[3,2,1],[7,8,9],[7,8,9]],ndmin=5)  
             result=np.multiply(array1,array2)  
@@ -58,12 +58,12 @@ def main():
         agents=[]
         teklifler=[]
             # Birden çok işlem sürecinde worker_function fonksiyonunu çalıştırma
-        for i in range(10):
+        for i in range(100):
             agents.append(Test(name=i))
 
-        for i in range(24):
-            results = pool.starmap(worker_function,[(agent,i) for agent,i in zip(agents,[i for i in range(0,10)])])
-            for i in range(10):
+        for i in range(240):
+            results = pool.starmap(worker_function,[(agent,i) for agent,i in zip(agents,[i for i in range(0,100)])])
+            for i in range(100):
                agents[i] = results[i]['ins']
         pool.terminate()
     stop = timeit.default_timer()
@@ -97,12 +97,12 @@ def main_sing():
     agents=[]
     teklifler=[]
     nums=[]
-    for i in range(10):
+    for i in range(100):
         agents.append(Test(name=i))
         nums.append(i)
 
-    for i in range(24):
-        for a in range(10):
+    for i in range(240):
+        for a in range(100):
             result = agents[a].run(nums[a])
 
     stop = timeit.default_timer()
