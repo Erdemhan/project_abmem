@@ -1,7 +1,7 @@
 # db/models.py
 from django.db import models
 from django_enumfield import enum
-from enums import EnergyType
+from .enums import EnergyType
 from .market import Market
 from .agent import Agent
 from .base import Base

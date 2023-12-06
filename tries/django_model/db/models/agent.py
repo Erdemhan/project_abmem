@@ -1,7 +1,7 @@
 # db/models.py
 from django.db import models
 from django_enumfield import enum
-from enums import AgentState
+from .enums import AgentState
 from .base import Base
 from .market import Market
 

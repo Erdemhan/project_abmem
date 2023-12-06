@@ -1,7 +1,7 @@
 # db/models.py
 from django.db import models
 from django_enumfield import enum
-from enums import MarketState,MarketStrategy
+from .enums import MarketState,MarketStrategy
 from .base import Base
 from .simulation import Simulation
 

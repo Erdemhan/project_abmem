@@ -1,7 +1,7 @@
 # db/models.py
 from django.db import models
 from django_enumfield import enum
-from enums import SimulationMode,SimulationState,PeriodType
+from .enums import SimulationMode,SimulationState,PeriodType
 from .base import Base
 
 

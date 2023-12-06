@@ -1,12 +1,17 @@
-# Byte-compiled / optimized / DLL files
+#Custom
 __pycache__/
+*.idea
+.idea
+db.sqlite3
+migrations
+
+# Byte-compiled / optimized / DLL files
+
 *.py[cod]
 *$py.class
 
 # C extensions
 *.so
-*.idea
-.idea
 # Distribution / packaging
 .Python
 build/
