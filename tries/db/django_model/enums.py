@@ -13,15 +13,16 @@ class PeriodType(enum.Enum):
     YEAR = 4
 
 class SimulationState(enum.Enum):
-    STARTED = 8
-    INITIALIZING = 0
-    BIDDING = 1
-    MARKETCLEARING = 2
-    PERIODRESULT= 3
-    RESULT= 4
-    FINISHED = 5
-    STOPPED = 6
-    CANCELED = 7
+    CREATED = 0
+    STARTED = 1
+    INITIALIZING = 2
+    BIDDING = 3
+    MARKETCLEARING = 4
+    PERIODRESULT= 5
+    RESULT= 6
+    FINISHED = 7
+    STOPPED = 8
+    CANCELED = 9
 
 class SimulationMode(enum.Enum):
     STEPBYSTEP = 0
@@ -34,12 +35,13 @@ class MarketStrategy(enum.Enum):
 
 
 class MarketState(enum.Enum):
-    WAITINGOFFERS = 0
-    GETTINGOFFERS = 1
-    MARKETCLEARING = 2
-    BROADCASTING = 3
+    CREATED = 0
+    WAITINGOFFERS = 1
+    GETTINGOFFERS = 2
+    MARKETCLEARING = 3
+    BROADCASTING = 4
 
 class AgentState(enum.Enum):
-    NOTSTARTED = 0
+    CREATED = 0
     WAITING = 1
     RUNNING= 2
