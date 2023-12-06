@@ -12,7 +12,7 @@ def init_django():
 
     settings.configure(
         INSTALLED_APPS=[
-            'db',
+            'django_model.db',
         ],
         DATABASES={
             'default': {

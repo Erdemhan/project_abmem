@@ -1,5 +1,6 @@
 import db.models as models
 from db.models.enums import *
+
 def main():
     simulation = models.simulation.Simulation(name='TEST',
                                 mode=SimulationMode.STEPBYSTEP,

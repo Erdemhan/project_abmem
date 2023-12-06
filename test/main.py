@@ -1,5 +1,6 @@
-import db.models as models
-from db.models.enums import *
+import django_model.db.models as models
+from django_model.db.models.enums import *
+from services.agent.agent_factory import *
 
 def main():
     simulation = models.simulation.Simulation(name='TEST',
@@ -19,8 +20,6 @@ def main():
                               )
     market.save()
 
-    
-
 
     resource = models.models.Resource(energyType=EnergyType.FOSSIL,
                                   name='Coal',
@@ -28,21 +27,13 @@ def main():
                                   emission=0.5)
     resource.save()
     
-    agent = models.agent.Agent(market=market,
-                            budget=100)
-    agent.save()
-    
-    portfolio=models.models.Portfolio(agent=agent)
-    portfolio.save()
-
-    plant = models.models.Plant(portfolio=portfolio,
-                            resource=resource,
-                            capacity=100)
-    plant.save()
+    agent = createAgent(market,120)
+    agent.init()
+    offers = agent.run()
 
 
 
-    print(agent.budget)
+    print(offers , agent.state)
 
 
 
