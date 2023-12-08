@@ -25,9 +25,8 @@ class SimulationState(enum.Enum):
     CANCELED = 9
 
 class SimulationMode(enum.Enum):
-    STEPBYSTEP = 0
-    PERIODBYPERIOD = 1
-    ONLYRESULT = 2
+    PERIODBYPERIOD = 0
+    ONLYRESULT = 1
 
 
 class MarketStrategy(enum.Enum):
@@ -36,12 +35,21 @@ class MarketStrategy(enum.Enum):
 
 class MarketState(enum.Enum):
     CREATED = 0
-    WAITINGOFFERS = 1
-    GETTINGOFFERS = 2
-    MARKETCLEARING = 3
-    BROADCASTING = 4
+    INITIALIZING = 1
+    INITIALIZED = 2
+    WAITINGAGENTS = 3
+    CALCULATING = 4
+    MARKETCLEARING = 5
+    BROADCASTING = 6
+    PERIODEND = 7
 
 class AgentState(enum.Enum):
     CREATED = 0
     WAITING = 1
     RUNNING= 2
+
+class AgentType(enum.Enum):
+    RENEWABLE = 0
+    FOSSIL = 1
+    NUCLEAR = 2
+    HYBRID = 3
