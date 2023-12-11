@@ -8,7 +8,7 @@ from .simulation import Simulation
 from models import Period,Offer
 from services.market import market_service as MarketService
 from services.visualization import visualization_service as VisualizationService
-import time
+from agent import Agent
 from decimal import Decimal
 
 # MARKET
@@ -21,9 +21,8 @@ class Market(Base):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
-        self.data = None
+        self.data = self.readData()
         self.currentPeriod = -1
-
 
     def init(self):
         self.state = MarketState.INITIALIZING
@@ -31,11 +30,12 @@ class Market(Base):
             # Placeholder for future development
             pass
         self.data = self.readData()
+        self.agents = self.createAgents()
+        self.initAgents(self.agents)
         self.save()
-        time.sleep(5)
         
     def readData(self):
-        self.data = MarketService.readData()
+        return MarketService.readData()
 
     def startPeriod(self):
         self.currentPeriod += 1
@@ -56,7 +56,16 @@ class Market(Base):
     def showPeriodDetails(self) -> None:
         VisualizationService.visualize(self.period)
 
-    def run(self):
+    def createAgents(self,agentData) -> [Agent]:
+        return MarketService.createAgents(self,agentData)
+    
+    def initAgents(self):
+        return MarketService.initAgents(self.agents)
+
+
+
+
+    def run(self) -> bool:
         if self.state == MarketState.CREATED:
             self.init()
 
@@ -67,5 +76,6 @@ class Market(Base):
         
         self.broadCast(offers,ptf)
         self.state = MarketState.PERIODEND
-        self.showPeriodDetails()
         self.save()
+        self.showPeriodDetails()
+        return True

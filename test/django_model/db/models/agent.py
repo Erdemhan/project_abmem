@@ -23,6 +23,7 @@ class Agent(Base):
     def init(self) -> None:
         self.state = AgentState.WAITING
         self.data = AgentService.readData()
+        # Create portfolio
         self.save()
 
         

@@ -15,7 +15,7 @@ class PeriodType(enum.Enum):
 class SimulationState(enum.Enum):
     CREATED = 0
     STARTED = 1
-    INITIALIZING = 2
+    INITIALIZED = 2
     BIDDING = 3
     MARKETCLEARING = 4
     PERIODRESULT= 5
