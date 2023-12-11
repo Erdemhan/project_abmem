@@ -47,6 +47,10 @@ class AgentState(enum.Enum):
     CREATED = 0
     WAITING = 1
     RUNNING= 2
+    LEARNING = 3
+    PREDICTING = 4
+    CALCULATING = 5
+    OFFERING = 6
 
 class AgentType(enum.Enum):
     RENEWABLE = 0

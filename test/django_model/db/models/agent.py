@@ -5,8 +5,9 @@ from django_enumfield import enum
 from .enums import AgentState , AgentType
 from .base import Base
 from .market import Market
+from .models import Offer
 from services.agent import agent_service as AgentService
-import time
+
 
 # AGENT
 class Agent(Base):
@@ -19,36 +20,36 @@ class Agent(Base):
         super().__init__(*args, **kwargs)
         self.data = None
 
-    def init(self):
+    def init(self) -> None:
         self.state = AgentState.WAITING
         self.data = AgentService.readData()
         self.save()
-        time.sleep(5)
-        
-    def relearn(self,results = AgentState.RUNNING):
-        self = AgentService.relearn(self,results)
-        self.save()
-        time.sleep(5)
 
-    def predict(self,results = AgentState.RUNNING):
+        
+    def relearn(self,results = AgentState.RUNNING) -> None:
+        AgentService.relearn(self,results)
+
+    def predict(self,results = AgentState.RUNNING) -> int:
         return AgentService.predict(self,results)
     
     # Decision in design
-    def calculateOffers(self,prediction):
+    def calculateOffers(self,prediction: int) -> [Offer]:
         return AgentService.calculateOffers(self,prediction)
     
-    def giveOffers(self):
+    def giveOffers(self) -> None:
         return AgentService.saveOffers(self)
 
 
-    def run(self):
+    def run(self) -> bool:
         if self.state == AgentState.CREATED:
             self.init()
-            
+        self.state = AgentState.RUNNING
+        self.save()
         self.relearn()
         prediction = self.predict()
+        offers = self.calculateOffers(prediction)
+        self.giveOffers(offers)
         self.state = AgentState.WAITING
-        time.sleep(5)
         self.save()
-        return self.calculateOffers(prediction)
+        return True
 

@@ -5,10 +5,11 @@ from django_enumfield import enum
 from .enums import MarketState,MarketStrategy,SimulationMode
 from .base import Base
 from .simulation import Simulation
-from models import Period
+from models import Period,Offer
 from services.market import market_service as MarketService
 from services.visualization import visualization_service as VisualizationService
 import time
+from decimal import Decimal
 
 # MARKET
 class Market(Base):
@@ -27,6 +28,7 @@ class Market(Base):
     def init(self):
         self.state = MarketState.INITIALIZING
         if self.strategy == MarketStrategy.DAYAHEAD:
+            # Placeholder for future development
             pass
         self.data = self.readData()
         self.save()
@@ -39,31 +41,30 @@ class Market(Base):
         self.currentPeriod += 1
         return MarketService.createPeriod(self)
 
-    def startAgents(self):
-        return MarketService.startPool(self.lowerBidBound,self.upperBidBound,self.currentPeriod)
+    def startAgents(self, period:Period)-> [Offer]:
+        return MarketService.startPool(self.lowerBidBound,self.upperBidBound,period)
 
-    def calculateOffers(self,offers):
+    def calculateOffers(self, offers:[Offer])-> [Offer]:
         return MarketService.marketAlgorithm(self,offers)
     
-    def marketClearing(self,offers,ptf):
+    def marketClearing(self, offers:[Offer] ,ptf: Decimal)-> [Offer]:
         return MarketService.marketClearing(self,offers,ptf)
     
-    def broadCast(self,offers,ptf):
+    def broadCast(self,offers:[Offer] ,ptf: Decimal) -> None:
         MarketService.saveToDb(self,offers,ptf)
 
-    def showPeriodDetails(self):
+    def showPeriodDetails(self) -> None:
         VisualizationService.visualize(self.period)
-
-
-
 
     def run(self):
         if self.state == MarketState.CREATED:
             self.init()
+
         period = self.startPeriod()
-        offers = self.startAgents()
+        offers = self.startAgents(period)
         offers,ptf = self.calculateOffers(offers)
         offers = self.marketClearing(offers,ptf)
+        
         self.broadCast(offers,ptf)
         self.state = MarketState.PERIODEND
         self.showPeriodDetails()

@@ -6,7 +6,7 @@ from decimal import Decimal
 def startPool(market: Market, lower: int, upper: int, periodNum: int) -> [Offer]:
     market.state = MarketState.WAITINGAGENTS
     agents = market.agent_set.all()
-    # ParallelService.startPool()
+    # ParallelService.startPool(agents)
     market.save()
     pass
 
