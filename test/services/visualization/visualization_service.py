@@ -10,6 +10,7 @@ def visualizePeriod(period: Period) -> None:
 def visulizeSimulation(periods: [Period]) -> None:
     pass
 
+
 def test():
     simulation = models.simulation.Simulation(name='TEST',
                                 mode=SimulationMode.ONLYRESULT,
