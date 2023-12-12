@@ -21,9 +21,9 @@ class Agent(Base):
         self.data = None
 
     def init(self) -> None:
-        self.state = AgentState.WAITING
+        self.state = AgentState.INITIALIZED
         self.data = AgentService.readData()
-        # Create portfolio
+        AgentService.createPortfolio(self.data['portfolio'])
         self.save()
 
         

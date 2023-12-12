@@ -1,6 +1,7 @@
-from django_model.db.models.models import Offer,Period
+from django_model.db.models.models import Offer,Period,Portfolio
 from django_model.db.models.agent import Agent
 from django_model.db.models.enums import AgentState
+import portfolio_factory as PortfolioFactory
 
 def readData() -> dict:
     # ReaderService.read()
@@ -31,3 +32,7 @@ def saveOffers(agent: Agent,offers: [Offer]) -> None:
     # Prediction Module
     # for offer in offers save()
     pass
+
+
+def createPortfolio(agent: Agent, plantsData: dict) -> Portfolio:
+    return PortfolioFactory.create(agent,plantsData)

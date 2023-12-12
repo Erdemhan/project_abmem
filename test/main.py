@@ -4,7 +4,7 @@ from services.agent.agent_factory import *
 
 def main():
     simulation = models.simulation.Simulation(name='TEST',
-                                mode=SimulationMode.STEPBYSTEP,
+                                mode=SimulationMode.ONLYRESULT,
                                 state=SimulationState.STARTED,
                                 periodType=PeriodType.HOUR,
                                 periodNumber=10,
@@ -27,13 +27,6 @@ def main():
                                   emission=0.5)
     resource.save()
     
-    agent = createAgent(market,120)
-    agent.init()
-    offers = agent.run()
-
-
-
-    print(offers , agent.state)
 
 
 

@@ -51,6 +51,7 @@ class AgentState(enum.Enum):
     PREDICTING = 4
     CALCULATING = 5
     OFFERING = 6
+    INITIALIZED = 7
 
 class AgentType(enum.Enum):
     RENEWABLE = 0
