@@ -10,4 +10,8 @@ class Market():
         self.upperBound =upperBound
 
 
+def market():
+    return Market(strategy=MarketStrategy.DAYAHEAD,state=MarketState.CREATED,lowerBound=0,upperBound=100)
 
+def main():
+    market = market()
