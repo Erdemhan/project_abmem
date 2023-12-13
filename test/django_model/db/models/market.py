@@ -2,13 +2,10 @@
 from typing import Any
 from django.db import models
 from django_enumfield import enum
-from .enums import MarketState,MarketStrategy,SimulationMode
+from .enums import MarketState,MarketStrategy
 from .base import Base
-from .simulation import Simulation
-from models import Period,Offer
 from services.market import market_service as MarketService
 from services.visualization import visualization_service as VisualizationService
-from agent import Agent
 from decimal import Decimal
 
 # MARKET
@@ -17,7 +14,6 @@ class Market(Base):
     state = enum.EnumField(MarketState,null=False,default=MarketState.CREATED)
     lowerBidBound = models.IntegerField()
     upperBidBound = models.IntegerField()
-    simulation = models.OneToOneField(Simulation,on_delete=models.CASCADE,null=False)
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
@@ -41,22 +37,22 @@ class Market(Base):
         self.currentPeriod += 1
         return MarketService.createPeriod(self)
 
-    def startAgents(self, period:Period)-> [Offer]:
+    def startAgents(self, period) :
         return MarketService.startPool(self.lowerBidBound,self.upperBidBound,period)
 
-    def calculateOffers(self, offers:[Offer])-> [Offer]:
+    def calculateOffers(self, offers):
         return MarketService.marketAlgorithm(self,offers)
     
-    def marketClearing(self, offers:[Offer] ,ptf: Decimal)-> [Offer]:
+    def marketClearing(self, offers,ptf: Decimal):
         return MarketService.marketClearing(self,offers,ptf)
     
-    def broadCast(self,offers:[Offer] ,ptf: Decimal) -> None:
+    def broadCast(self,offers,ptf: Decimal) -> None:
         MarketService.saveToDb(self,offers,ptf)
 
     def showPeriodDetails(self) -> None:
-        VisualizationService.visualize(self.period)
+        VisualizationService.visualizePeriod(self.period)
 
-    def createAgents(self,agentData) -> [Agent]:
+    def createAgents(self,agentData):
         return MarketService.createAgents(self,agentData)
     
     def initAgents(self):

@@ -1,13 +1,13 @@
-from django_model.db.models.models import Period
+
 from django_model.db import models
 from django_model.db.models.enums import *
 
-def visualizePeriod(period: Period) -> None:
+def visualizePeriod(period) -> None:
     test()
     pass
 
 
-def visulizeSimulation(periods: [Period]) -> None:
+def visulizeSimulation(periods) -> None:
     pass
 
 def test():

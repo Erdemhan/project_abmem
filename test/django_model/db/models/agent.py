@@ -5,7 +5,6 @@ from django_enumfield import enum
 from .enums import AgentState , AgentType
 from .base import Base
 from .market import Market
-from .models import Offer
 from services.agent import agent_service as AgentService
 
 
@@ -34,7 +33,7 @@ class Agent(Base):
         return AgentService.predict(self,results)
     
     # Decision in design
-    def calculateOffers(self,prediction: int) -> [Offer]:
+    def calculateOffers(self,prediction: int):
         return AgentService.calculateOffers(self,prediction)
     
     def giveOffers(self) -> None:

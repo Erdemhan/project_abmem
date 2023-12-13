@@ -1,36 +1,36 @@
-from django_model.db.models.models import Offer,Market,Period,Agent
+import sys
+sys.path.append("D:/Projeler/abm/abmem_project/test")
 from django_model.db.models.enums import MarketState,MarketStrategy,SimulationMode
-from agent import agent_factory as AgentFactory
-import period_factory as PeriodFactory
+from . import period_factory as PeriodFactory
 from decimal import Decimal
 
 
-def startPool(market: Market, lower: int, upper: int, periodNum: int) -> [Offer]:
+def startPool(market, lower: int, upper: int, periodNum: int):
     market.state = MarketState.WAITINGAGENTS
     agents = market.agent_set.all()
     # ParallelService.startPool(agents)
     market.save()
     pass
 
-def marketAlgorithm(market: Market, offers: [Offer]) -> ([Offer],Decimal):
+def marketAlgorithm(market, offers) :
     market.state = MarketState.CALCULATING
     # Market Algorithm / Calculate PTF
     market.save()
     pass
 
-def marketClearing(market: Market,offers: [Offer], ptf: Decimal) -> [Offer]:
+def marketClearing(market,offers, ptf: Decimal):
     market.state = MarketState.MARKETCLEARING
     # Market Clearing
     market.save()
     pass
 
-def saveToDb(market: Market,offers: [Offer], ptf: Decimal) -> None:
+def saveToDb(market,offers, ptf: Decimal) -> None:
     market.state = MarketState.BROADCASTING
     # for offer in offers save() / market.period.save()
     market.save()
     pass
 
-def createPeriod(market: Market) -> Period:
+def createPeriod(markett):
     PeriodFactory.create()
     pass
 
@@ -38,14 +38,15 @@ def readData() -> dict:
     # ReaderService.readMarketData()
     pass
 
-def createAgents(market: Market,agentData) -> [Agent]:
+def createAgents(market,agentData):
+    from ..agent import agent_factory as AgentFactory
     agents = []
     for agent in agentData:
         agents.append(AgentFactory.create(market,agent.budget,agent.type))
     return agents
 
 
-def initAgents(agents: [Agent]) -> None:
+def initAgents(agents) -> None:
     for agent in agents:
         agent.init()
 
