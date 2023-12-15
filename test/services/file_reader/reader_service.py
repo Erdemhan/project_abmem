@@ -17,9 +17,6 @@ def readMarketData(path: str= 'market.xlsx') -> dict:
 def readAgentData(path: str= 'agent.xlsx') -> dict:
     return  pd.read_excel(DATAPATH + path, engine='openpyxl', sheet_name='agent').to_dict(orient='records')[0]
 
-def test():
-    data = readMarketData()
-    if data['strategy'] == MarketStrategy.DAYAHEAD.name:
-        print("zaa")
+def readResourceData(path: str= 'resource.xlsx') -> dict:
+    return  pd.read_excel(DATAPATH + path, engine='openpyxl', sheet_name='agent').to_dict(orient='records')[0]
 
-a = test()

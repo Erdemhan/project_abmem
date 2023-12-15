@@ -1,11 +1,12 @@
-# db/models.py
+import sys
+sys.path.append("D:/Projeler/abm/abmem_project/test")
+
 from typing import Any
-from django.db import models
 from django_enumfield import enum
-from .enums import AgentState , AgentType
-from .base import Base
-from .market import Market
-from services.agent import agent_service as AgentService
+from enums import AgentState , AgentType
+from base import Base
+from market import Market
+from django.db import models
 
 
 # AGENT
@@ -17,39 +18,8 @@ class Agent(Base):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
-        self.data = None
-
-    def init(self) -> None:
         self.state = AgentState.INITIALIZED
-        self.data = AgentService.readData()
-        AgentService.createPortfolio(self.data['portfolio'])
         self.save()
-
-        
-    def relearn(self,results = AgentState.RUNNING) -> None:
-        AgentService.relearn(self,results)
-
-    def predict(self,results = AgentState.RUNNING) -> int:
-        return AgentService.predict(self,results)
+     
     
-    # Decision in design
-    def calculateOffers(self,prediction: int):
-        return AgentService.calculateOffers(self,prediction)
-    
-    def giveOffers(self) -> None:
-        return AgentService.saveOffers(self)
-
-
-    def run(self) -> bool:
-        if self.state == AgentState.CREATED:
-            self.init()
-        self.state = AgentState.RUNNING
-        self.save()
-        self.relearn()
-        prediction = self.predict()
-        offers = self.calculateOffers(prediction)
-        self.giveOffers(offers)
-        self.state = AgentState.WAITING
-        self.save()
-        return True
 

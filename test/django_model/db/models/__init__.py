@@ -1,9 +1,6 @@
-from . import models
-from . import agent
-from . import market
-from . import simulation
-from . import base
+import sys
+sys.path.append("D:/Projeler/abm/abmem_project/test")
+
 from manage import init_django
 
-# TO USE DJANGO ORM
 init_django()
