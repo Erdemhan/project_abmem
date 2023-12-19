@@ -1,3 +1,5 @@
+import sys
+sys.path.append("D:/Projeler/abm/abmem_project/test")
 from django_model.db.models.simulation import Simulation
 from django_model.db.models.enums import SimulationMode,SimulationState,PeriodType
 

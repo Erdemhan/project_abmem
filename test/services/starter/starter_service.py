@@ -1,3 +1,5 @@
+import sys
+sys.path.append("D:/Projeler/abm/abmem_project/test")
 from file_reader import reader_service as ReaderService
 from simulation import simulation_factory as SimulationFactory
 from simulation import simulation_service as SimulationService

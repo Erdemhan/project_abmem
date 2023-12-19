@@ -1,6 +1,8 @@
+import sys
+sys.path.append("D:/Projeler/abm/abmem_project/test")
 from django_model.db.models.enums import AgentState
 from django_model.db.models import Agent,Offer,Portfolio
-from file_reader import reader_service as ReaderService
+from services.file_reader import reader_service as ReaderService
 import portfolio_factory as PortfolioFactory
 
 def init(agent: Agent):

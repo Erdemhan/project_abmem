@@ -1,3 +1,5 @@
+import sys
+sys.path.append("D:/Projeler/abm/abmem_project/test")
 from django_model.db.models.models import Resource
 from django_model.db.models.enums import EnergyType
 from decimal import Decimal
