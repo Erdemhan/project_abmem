@@ -1,10 +1,10 @@
 # db/models.py
 from django.db import models
 from django_enumfield import enum
-from enums import EnergyType
-from market import Market
-from agent import Agent
-from base import Base
+from django_model.db.models.enums import EnergyType
+from django_model.db.models.market import Market
+from django_model.db.models.agent import Agent
+from django_model.db.models.base import Base
 
 
 

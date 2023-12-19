@@ -2,10 +2,11 @@ import sys
 sys.path.append("D:/Projeler/abm/abmem_project/test")
 from django_enumfield import enum
 from typing import Any
-from enums import *
-from base import Base
+from django_model.db.models.enums import *
+from django_model.db.models.simulation import Simulation
+from django_model.db.models.base import Base
 from django.db import models
-from simulation import Simulation
+
 
 # MARKET
 class Market(Base):

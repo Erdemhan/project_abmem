@@ -1,11 +1,10 @@
 # db/models.py
+import sys
+sys.path.append("D:/Projeler/abm/abmem_project/test")
 from django.db import models
 from django_enumfield import enum
-from enums import SimulationMode,SimulationState,PeriodType,MarketState,MarketStrategy
-from services.simulation import simulation_service as SimulationService
-from services.market import market_factory as MarketFactory
-from services.visualization import visualization_service as VisualizationService
-from base import Base
+from django_model.db.models.enums import SimulationMode,SimulationState,PeriodType
+from django_model.db.models.base import Base
 from typing import Any
 
 
