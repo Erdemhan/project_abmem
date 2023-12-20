@@ -1,5 +1,6 @@
 from django_model.db.models import *
 from django_model.db.models import enums
+from services.agent import agent_factory as AgentFactory
 
 def main():
     simulation = Simulation(name='TEST',
@@ -28,9 +29,7 @@ def main():
                                   emission=0.5)
     resource.save()
 
-    agent = Agent(market=market,
-                            budget=100)
-    agent.save()
+    agent = AgentFactory.create(market=market,budget=100,type=enums.AgentType.NUCLEAR)
 
     portfolio=Portfolio(agent=agent)
     portfolio.save()

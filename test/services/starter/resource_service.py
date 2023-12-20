@@ -1,28 +1,19 @@
 import sys
 sys.path.append("D:/Projeler/abm/abmem_project/test")
 from django_model.db.models.models import Resource
-from django_model.db.models.enums import EnergyType
-from decimal import Decimal
-
-def create(name: str, energyType: EnergyType, fuelCost: Decimal, emission = Decimal) -> (Resource,bool):
-    created = False
-    # if Resource.getResourceByName(plantData['name']) is not exist
-    if energyType == EnergyType.RENEWABLE:
-        fuelCost ,emission = 0,0
-    resource = Resource(name=name, energyType=energyType, fuelCost=fuelCost, emission=emission)
-    resource.save()
-    created = True
-    # else resource = getResourceByName(plantData['name'])
-    return (resource.name,created)
-    
+from services.starter import resource_factory as ResourceFactory
+from constants import *
 
 
 def createFromData(resourcesData: dict) -> [Resource]:
     created = []
     for resource in resourcesData:
-        resource,result = create(resource['name'],resource['energyType'],resource['fuelCost'],resource['emission'])
-        if result:
+        resource = ResourceFactory.create(name= resource[RESOURCES_NAME_KEY],
+                                                 energyType= resource[RESOURCES_ENERGY_TYPE_KEY],
+                                                 fuelCost= resource[RESOURCES_FUELCOST_KEY],
+                                                 emission= resource[RESOURCES_EMISSION_KEY])
+        if resource:
             created.append(resource)
-            print(resource.name , "with id:", resource.id, " Created")
-    print(len(created), " Resources created", len(resourcesData)-len(created), " Resources already exists")
+            print(resourceCreatedString(name=resource.name, id=resource.id))
+    print(resourcesCreationReportString(dataLenght= len(resourcesData), creationLength= len(created)))
     return created

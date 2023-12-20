@@ -3,11 +3,10 @@ sys.path.append("D:/Projeler/abm/abmem_project/test")
 from django_model.db.models.enums import AgentState
 from django_model.db.models import Agent,Offer,Portfolio
 from services.file_reader import reader_service as ReaderService
-import portfolio_factory as PortfolioFactory
+from services.agent import portfolio_factory as PortfolioFactory
 
-def init(agent: Agent):
+def init(agent: Agent, portfolioData: dict):
     agent.state = AgentState.INITIALIZED
-    portfolioData = readData()
     createPortfolio(agent,portfolioData)
     agent.save()
 
@@ -39,10 +38,6 @@ def saveOffers(agent: Agent, offers: [Offer]) -> None:
 
 def createPortfolio(agent: Agent, plantsData: dict) -> Portfolio:
     return PortfolioFactory.create(agent,plantsData)
-
-
-def readData() -> dict:
-    return ReaderService.readAgentData()
 
 
 def run(agent: Agent) -> bool:

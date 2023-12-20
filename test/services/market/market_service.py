@@ -1,23 +1,25 @@
 import sys
 sys.path.append("D:/Projeler/abm/abmem_project/test")
-from django_model.db.models.enums import MarketState,MarketStrategy,SimulationMode
-import period_factory as PeriodFactory
-import visualization.visualization_service as VisualizationService
-from django_model.db.models import Market,Period,Agent,Offer
+from django_model.db.models.enums import MarketState,MarketStrategy
+from services.market import period_factory as PeriodFactory
+from services.visualization import visualization_service as VisualizationService
+from django_model.db.models import Market,Period,Offer
 from decimal import Decimal
-from agent import agent_service as AgentService
-from agent import agent_factory as AgentFactory
-from file_reader import reader_service as ReaderService
+from services.agent import agent_service as AgentService
+from services.agent import agent_factory as AgentFactory
+from services.file_reader import reader_service as ReaderService
+from constants import *
+
 
 def init(market: Market) -> None:
     market.state = MarketState.INITIALIZED
     if market.strategy == MarketStrategy.DAYAHEAD:
         # Placeholder for future development
         pass
-    agentData = readData()
+    agentData = readAgentData()
     agents = createAgents(market,agentData)
-    for agent in agents:
-        AgentService.init(agent)
+    for agentData,agent in zip(agentData,agents):
+        AgentService.init(agent= agent,portfolioData= agentData[AGENTS_PORTFOLIO_KEY])
     market.save()
 
 def startPool(market: Market, lower: int, upper: int, periodNum: int) -> None:
@@ -49,13 +51,15 @@ def createPeriod(market: Market):
     PeriodFactory.create()
     pass
 
-def readData() -> dict:
-    return ReaderService.readMarketData()
+def readAgentData() -> dict:
+    return ReaderService.readData(path= AGENT_DATA_PATH, key= AGENTS_DATA_KEY)
 
 def createAgents(market: Market, agentData: dict):    
     agents = []
     for agent in agentData:
-        agents.append(AgentFactory.create(market,agent.budget,agent.type))
+        agents.append(AgentFactory.create(market= market,
+                                          budget= agent[AGENTS_BUDGET_KEY],
+                                          type= agent[AGENTS_TYPE_KEY]))
     return agents
 
 def showPeriodDetails(period: Period) -> None:

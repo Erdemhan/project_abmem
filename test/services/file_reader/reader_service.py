@@ -2,21 +2,27 @@ import sys
 sys.path.append("D:/Projeler/abm/abmem_project/test")
 import pandas as pd
 from django_model.db.models.enums import *
+import yaml
+from constants.paths import DATAPATH,SIMULATION_DATA_PATH
 
-DATAPATH = 'test/data/'
+# TODO: yaml scheme validator / checkers (IO operations, consistency agent portfolio resources already saved?) / ErrorService / 
 
-def readFile(path: str) -> dict:
-    return  pd.read_excel(DATAPATH + path, engine='openpyxl', sheet_name=None).to_dict(orient='records')[0]
 
-def readSimData(path: str = 'simulation.xlsx') -> dict:
-    return  pd.read_excel(DATAPATH + path, engine='openpyxl', sheet_name='simulation').to_dict(orient='records')[0]
+def openFile(path: str):
+    try:
+        with open(DATAPATH + path, 'r') as file:
+            data = yaml.safe_load(file)
+            return data
+    except FileNotFoundError:
+        print(path,"could not find in folder data")
+        sys.exit(1)
 
-def readMarketData(path: str= 'market.xlsx') -> dict:
-    return  pd.read_excel(DATAPATH + path, engine='openpyxl', sheet_name='market').to_dict(orient='records')[0]
-
-def readAgentData(path: str= 'agent.xlsx') -> dict:
-    return  pd.read_excel(DATAPATH + path, engine='openpyxl', sheet_name='agent').to_dict(orient='records')[0]
-
-def readResourceData(path: str= 'resource.xlsx') -> dict:
-    return  pd.read_excel(DATAPATH + path, engine='openpyxl', sheet_name='agent').to_dict(orient='records')[0]
-
+        
+def readData(path: str, key: str) -> dict:
+    try:
+        data = openFile(path)
+        return data[key]
+    except KeyError:
+        print("Key: '" , key , "' could not find in " , path)
+        sys.exit(1)
+        

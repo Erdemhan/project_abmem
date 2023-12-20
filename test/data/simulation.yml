@@ -1,0 +1,5 @@
+simulation:
+  name: test_sim
+  mode: ONLYRESULT
+  periodtype: HOUR
+  periodnumber: 4

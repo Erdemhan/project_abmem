@@ -1,0 +1,39 @@
+
+# SIMULATION
+SIMULATION_DATA_KEY = 'simulation'
+SIMULATION_NAME_KEY = 'name'
+SIMULATION_MODE_KEY = 'mode'
+SIMULATION_PERIOD_TYPE_KEY = 'periodtype'
+SIMULATION_PERIOD_NUMBER_KEY = 'periodnumber'
+
+
+# RESOURCE
+RESOURCES_DATA_KEY = 'resources'
+RESOURCES_NAME_KEY = 'name'
+RESOURCES_ENERGY_TYPE_KEY = 'energytype'
+RESOURCES_FUELCOST_KEY = 'fuelcost'
+RESOURCES_EMISSION_KEY = 'emission'
+
+
+# MARKET
+MARKET_DATA_KEY = 'market'
+MARKET_LOWERBOUND_KEY = 'lowerbound'
+MARKET_UPPERBOUND_KEY = 'upperbound'
+MARKET_STRATEGY_KEY = 'strategy'
+
+
+# AGENT
+AGENTS_DATA_KEY = 'agents'
+AGENTS_TYPE_KEY = 'agenttype'
+AGENTS_BUDGET_KEY = 'budget'
+AGENTS_PORTFOLIO_KEY = 'portfolio'
+
+
+# PORTFOLIO / PLANT
+PLANT_RESOURCE_KEY = 'resource'
+PLANT_CAPACITY_KEY = 'capacity'
+
+
+
+
+

@@ -1,0 +1,13 @@
+resources:
+  - name: coal
+    energytype: FOSSIL
+    fuelcost: 10
+    emission: 100
+  - name: solar
+    energytype: RENEWABLE
+    fuelcost: 0
+    emission: 0
+  - name: uranium
+    energytype: NUCLEAR
+    fuelcost: 100
+    emission: 0 

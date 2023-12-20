@@ -13,7 +13,7 @@ from django_model.db.models.base import Base
 # RESOURCE
 class Resource(Base):
     energyType = enum.EnumField(EnergyType,null=False)
-    name = models.CharField(max_length=20,null=False)
+    name = models.CharField(max_length=20,null=False,unique=True)
     fuelCost = models.DecimalField(decimal_places=1,max_digits=5,null=False,default=0)
     emission = models.DecimalField(decimal_places=1,max_digits=5,null=False,default=0)
 
