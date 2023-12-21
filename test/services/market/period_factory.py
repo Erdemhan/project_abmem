@@ -1,7 +1,8 @@
-from django_model.db.models.models import Period
-from django_model.db.models.market import Market
+import sys
+sys.path.append("D:/Projeler/abm/abmem_project/test")
+from django_model.db.models import Period
 
-def create(market: Market, num: int, demand: int) -> Period:
-    period = Period(market=market,periodNumber=num,demand=demand)
+def create(market, num: int, demand: int) -> Period:
+    period = Period(market= market, periodNumber= num, demand= demand)
     period.save()
     return period

@@ -1,19 +1,19 @@
-import django_model.db.models as models
-from django_model.db.models.enums import *
-from services.agent.agent_factory import *
+from django_model.db.models import *
+from django_model.db.models import enums
+from services.agent import agent_factory as AgentFactory
 
 def main():
-    simulation = models.simulation.Simulation(name='TEST',
-                                mode=SimulationMode.ONLYRESULT,
-                                state=SimulationState.STARTED,
-                                periodType=PeriodType.HOUR,
+    simulation = Simulation(name='TEST',
+                                mode=enums.SimulationMode.ONLYRESULT,
+                                state=enums.SimulationState.STARTED,
+                                periodType=enums.PeriodType.HOUR,
                                 periodNumber=10,
                                 currentPeriod=0,
                                 )
     simulation.save()
 
-    market = models.market.Market(strategy=MarketStrategy.DAYAHEAD,
-                              state=MarketState.BROADCASTING,
+    market = Market(strategy=enums.MarketStrategy.DAYAHEAD,
+                              state=enums.MarketState.BROADCASTING,
                               lowerBidBound=0,
                               upperBidBound=100,
                               simulation=simulation
@@ -21,12 +21,27 @@ def main():
     market.save()
 
 
-    resource = models.models.Resource(energyType=EnergyType.FOSSIL,
+
+
+    resource = Resource(energyType=enums.EnergyType.FOSSIL,
                                   name='Coal',
                                   fuelCost=20.5,
                                   emission=0.5)
     resource.save()
-    
+
+    agent = AgentFactory.create(market=market,budget=100,type=enums.AgentType.NUCLEAR)
+
+    portfolio=Portfolio(agent=agent)
+    portfolio.save()
+
+    plant = Plant(portfolio=portfolio,
+                            resource=resource,
+                            capacity=100)
+    plant.save()
+
+
+
+    print(agent.budget)
 
 
 
