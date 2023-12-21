@@ -3,7 +3,7 @@ sys.path.append("D:/Projeler/abm/abmem_project/test")
 from django_model.db.models.enums import MarketState,MarketStrategy
 from services.market import period_factory as PeriodFactory
 from services.visualization import visualization_service as VisualizationService
-from django_model.db.models import Market,Period,Offer
+from django_model.db.models import Market,Period,Offer,Agent
 from decimal import Decimal
 from services.agent import agent_service as AgentService
 from services.agent import agent_factory as AgentFactory
@@ -22,11 +22,12 @@ def init(market: Market) -> None:
         AgentService.init(agent= agent,portfolioData= agentData[AGENTS_PORTFOLIO_KEY])
     market.save()
 
-def startPool(market: Market, lower: int, upper: int, periodNum: int) -> None:
+def startPool(market: Market) -> None:
     market.state = MarketState.WAITINGAGENTS
+    market.save()
     agents = market.agent_set.all()
     # ParallelService.startPool(agents)
-    market.save()
+    
     pass
 
 def marketAlgorithm(market: Market, offers: [Offer]) :
@@ -41,15 +42,20 @@ def marketClearing(market: Market, offers: [Offer], ptf: Decimal):
     market.save()
     pass
 
-def saveToDb(market: Market, offers: [Offer], ptf: Decimal) -> None:
+def updatePeriod(period:Period, offers: [Offer], ptf: Decimal) -> Period:
+    # update period
+    pass
+    return period
+
+def saveOffers(market: Market, offers: [Offer], ptf: Decimal) -> None:
     market.state = MarketState.BROADCASTING
-    # for offer in offers save() / market.period.save()
+    for offer in offers:
+        offer.save()
     market.save()
     pass
 
-def createPeriod(market: Market):
-    PeriodFactory.create()
-    pass
+def createPeriod(market: Market) -> Period:
+    return PeriodFactory.create(market= market, num= market.simulation.currentPeriod, demand= getDemand())
 
 def readAgentData() -> dict:
     return ReaderService.readData(path= AGENT_DATA_PATH, key= AGENTS_DATA_KEY)
@@ -67,15 +73,18 @@ def showPeriodDetails(period: Period) -> None:
 
 def run(market: Market) -> bool:
     if market.state == MarketState.CREATED:
-        market.init()
+        init(market)
 
     period = createPeriod(market)
-    offers = startPool(period)
+    offers = startPool(market)
     offers,ptf = marketAlgorithm(offers)
     offers = marketClearing(offers,ptf)
-    
-    saveToDb(offers,ptf)
+    period = updatePeriod(period=period,offers=offers,ptf=ptf)
+    saveOffers(offers,ptf)
     market.state = MarketState.PERIODEND
     market.save()
     showPeriodDetails(period)
     return True
+
+def getDemand() -> int:
+    return 100

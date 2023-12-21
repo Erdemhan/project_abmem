@@ -13,6 +13,7 @@ def start() -> None:
     simulation = createSimulation(simData)
     checkResources(resourceData)
     initSimulation(simulation)
+    # SimulationService.run(simulation)
 
 
 def readStarterData() -> (dict,dict):
