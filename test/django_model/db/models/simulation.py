@@ -17,9 +17,9 @@ class Simulation(Base):
     periodNumber = models.IntegerField(null=False)
     currentPeriod = models.IntegerField(null=False)
 
-
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.data = None
 
 
+Simulation(name="test" , mode=SimulationMode.ONLYRESULT, state=SimulationState.CREATED, periodType=PeriodType.DAY, periodNumber=10, currentPeriod=0)
