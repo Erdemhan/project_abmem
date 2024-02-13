@@ -35,4 +35,4 @@ def initSimulation(simulation: Simulation) -> None:
 def checkResources(resourceData: dict) -> [Resource]:
     return ResourceService.createFromData(resourceData)
 
-#start()
+start()

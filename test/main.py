@@ -24,9 +24,10 @@ def main():
 
 
     resource = Resource(energyType=enums.EnergyType.FOSSIL,
-                                  name='Coal',
+                                  name='Coalala',
                                   fuelCost=20.5,
                                   emission=0.5)
+    
     resource.save()
 
     agent = AgentFactory.create(market=market,budget=100,type=enums.AgentType.NUCLEAR)
@@ -37,8 +38,9 @@ def main():
     plant = Plant(portfolio=portfolio,
                             resource=resource,
                             capacity=100)
-    plant.save()
 
+    
+    plant.save()
 
 
     print(agent.budget)

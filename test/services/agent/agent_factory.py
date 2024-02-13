@@ -5,6 +5,7 @@ from django_model.db.models.market import Market
 from django_model.db.models.enums import AgentState,AgentType
 
 def create(market: Market, budget: int,type):
-    agent = Agent(market= market, state= AgentState.CREATED, budget= budget, type= AgentType[type])
+    type = AgentType.get(type)
+    agent = Agent(market= market, state= AgentState.CREATED, budget= budget, type= type)
     agent.save()
     return  agent
