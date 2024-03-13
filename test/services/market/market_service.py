@@ -7,6 +7,7 @@ from django_model.db.models import Market,Period,Offer,Agent
 from decimal import Decimal
 from services.agent import agent_service as AgentService
 from services.agent import agent_factory as AgentFactory
+from services.simulation import parallel_service as ParallelService
 from services.file_reader import reader_service as ReaderService
 from constants import *
 
@@ -26,8 +27,8 @@ def startPool(market: Market) -> None:
     market.state = MarketState.WAITINGAGENTS
     market.save()
     agents = market.agent_set.all()
-    # ParallelService.startPool(agents)
-    
+    ParallelService.startPool(agents)
+    print("pool finished")
     pass
 
 def marketAlgorithm(market: Market, offers: [Offer]) :
@@ -35,12 +36,14 @@ def marketAlgorithm(market: Market, offers: [Offer]) :
     # Market Algorithm / Calculate PTF
     market.save()
     pass
+    return 1,2
 
 def marketClearing(market: Market, offers: [Offer], ptf: Decimal):
     market.state = MarketState.MARKETCLEARING
     # Market Clearing
     market.save()
     pass
+    return 1,2
 
 def updatePeriod(period:Period, offers: [Offer], ptf: Decimal) -> Period:
     # update period
@@ -49,8 +52,8 @@ def updatePeriod(period:Period, offers: [Offer], ptf: Decimal) -> Period:
 
 def saveOffers(market: Market, offers: [Offer], ptf: Decimal) -> None:
     market.state = MarketState.BROADCASTING
-    for offer in offers:
-        offer.save()
+    #for offer in offers:
+        #offer.save()
     market.save()
     pass
 
@@ -73,16 +76,22 @@ def showPeriodDetails(period: Period) -> None:
 
 def run(market: Market) -> bool:
     if market.state == MarketState.CREATED:
+        print("market inited in market service")
         init(market)
 
     period = createPeriod(market)
     offers = startPool(market)
-    offers,ptf = marketAlgorithm(offers)
-    offers = marketClearing(offers,ptf)
+    offers,ptf = marketAlgorithm(market,offers)
+    offers = marketClearing(market,offers,ptf)
+    #debug
+    period.metDemand = -1
+    #debug
     period = updatePeriod(period=period,offers=offers,ptf=ptf)
-    saveOffers(offers,ptf)
+    print(" funcs called and period updated")
+    saveOffers(market,offers,ptf)
     market.state = MarketState.PERIODEND
     market.save()
+    print("period details will be shown")
     showPeriodDetails(period)
     return True
 

@@ -1,0 +1,12 @@
+pzt:
+mevcut durum analiz edilip nerede kaldık ne yapacağız neyimiz eksik değerlendirildi.
+
+Postgres'e geçirildi.
+ParallelService startpool yazıldı
+Simulationservice marketservice ve agentservice run ları çalışır hale getirildi
+servislerin tümü birbirine bağlandı.
+
+salı:
+
+crs:
+

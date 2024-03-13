@@ -1,9 +1,11 @@
 import sys
 sys.path.append("D:/Projeler/abm/abmem_project/test")
 from django_model.db.models.enums import AgentState
-from django_model.db.models import Agent,Offer,Portfolio
+from django_model.db.models import Agent,Offer,Portfolio,Resource
 from services.file_reader import reader_service as ReaderService
 from services.agent import portfolio_factory as PortfolioFactory
+from services.agent import offer_factory as OfferFactory
+import random
 
 def init(agent: Agent, portfolioData: dict):
     agent.state = AgentState.INITIALIZED
@@ -20,18 +22,19 @@ def predict(agent: Agent, results) -> int:
     agent.state = AgentState.PREDICTING
     agent.save()
     # Prediction Module
-    ptf = 10
-    return ptf
+    return random.randint(1,200)
 
-def calculateOffers(agent: Agent, ptf: int) -> [Offer]:
+def calculateOffers(agent: Agent, prediction: int) -> [Offer]:
     agent.state = AgentState.CALCULATING
     agent.save()
+    offers = []
+    for plant in agent.portfolio.plant_set.all():
+        offer = OfferFactory.create(agent=agent, resource=plant.resource, amount=plant.capacity, offerPrice=prediction)
+        offers.append(offer)
     # Offer Module
-    return [1,2,3]
+    return offers
 
-def saveOffers(agent: Agent, offers: [Offer]) -> None:
-    agent.state = AgentState.OFFERING
-    agent.save()
+def saveOffers(offers: [Offer]) -> None:
     for offer in offers:
         offer.save()
 
@@ -42,13 +45,15 @@ def createPortfolio(agent: Agent, plantsData: dict) -> Portfolio:
 
 def run(agent: Agent) -> bool:
     if agent.state == AgentState.CREATED:
+        print("entered to agent init in run")
         agent.__init__()
+    print("entered to agent run")
     agent.state = AgentState.RUNNING
     agent.save()
-    relearn()
-    prediction = predict()
-    offers = calculateOffers(prediction)
-    saveOffers(offers)
+    relearn(agent,results=0)
+    prediction = predict(agent,results=0)
+    offers = calculateOffers(agent,prediction)
+    saveOffers(agent,offers)
     agent.state = AgentState.WAITING
     agent.save()
-    return True
+    print(offers[1].amount,offers[1].offerPrice)

@@ -3,6 +3,7 @@ SIMULATION = 'simulation'
 MARKET = 'market'
 AGENTS = 'agents'
 RESOURCES = 'resources'
+SYSPATH = 'D:\lokal\Projeler\Tez\abm\abmem_project\test'
 
 
 def resourceCreatedString(name: str, id: int) -> str:

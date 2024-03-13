@@ -11,12 +11,12 @@ from constants import *
 
 def init(simulation: Simulation):
     simulation.state = SimulationState.INITIALIZED
-    simulation.currentPeriod = -1
+    simulation.currentPeriod = 1
     if simulation.mode == SimulationMode.ONLYRESULT:
         # Placeholder for future development
         pass
     elif simulation.mode == SimulationMode.PERIODBYPERIOD:
-            # Placeholder for future development
+        # Placeholder for future development
         pass
     marketData = readMarketData()
     market = MarketFactory.create(sim= simulation,
@@ -35,17 +35,21 @@ def run(simulation: Simulation) -> bool:
     isOk = True
     if simulation.market.state == MarketState.CREATED:
         simulation.market.init()
-    while simulation.currentPeriod > simulation.periodNumber:
-        simulation.market.run()
+        print("market inited")
+    while simulation.currentPeriod < simulation.periodNumber:
+        print("market run start")
+        MarketService.run(simulation.market)
         simulation.currentPeriod += 1
         simulation.save()
         if simulation.mode == SimulationMode.ONLYRESULT:
+            print("mode onlyresult" , simulation.mode)
             pass
         elif simulation.mode == SimulationMode.PERIODBYPERIOD:
             #wait for action
-            key = input("Enter any key to continue")
+            key = input("Press enter to continue")
             pass
-    VisualizationService.visulizeSimulation(simulation.market.period_set.all())
+    print("sim viz")
+    VisualizationService.visulaizeSimulation(simulation.market.period_set.all())
     return isOk
 
 

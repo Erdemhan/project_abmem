@@ -1,0 +1,32 @@
+WAW:
+Şuan verileri okuyor
+modelleri oluşturuyor ve veritabanına kaydediyor
+kaynakları kontrol ediyor eğer veritabanında yoksa yeni kaynak oluşturuyor varsa es geçiyor
+tahmin market clearing vs fonksiyonları boş bir şekilde tüm simulasyonu adım adım tamamlıyor.
+simulasyon çalışıyor agent ve marketin E deki fonksiyonlarının implementasyonları kaldı
+
+
+TODO:
+E
+--------
+agentservice.run (predict relearn vs)
+marketservice.run (market clearing vs)
+Tahmin fonksiyonunu araştır
+
+E+
+--
+errorservice
+logger
+VisualizationService
+
+E++
+--
+web endpoints/services
+web ui
+
+
+EL
+--
+ai model integration
+
+

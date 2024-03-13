@@ -1,10 +1,11 @@
 import sys
-sys.path.append("D:/Projeler/abm/abmem_project/test")
+
+sys.path.append("D:\lokal\Projeler\Tez\abm\abmem_project\test")
 from services.file_reader import reader_service as ReaderService
 from services.simulation import simulation_factory as SimulationFactory
 from services.simulation import simulation_service as SimulationService
 from django_model.db.models import Simulation,Resource
-import resource_service as ResourceService
+from services.starter import resource_service as ResourceService
 from constants import *
 
 
@@ -13,7 +14,7 @@ def start() -> None:
     simulation = createSimulation(simData)
     checkResources(resourceData)
     initSimulation(simulation)
-    # SimulationService.run(simulation)
+    SimulationService.run(simulation)
 
 
 def readStarterData() -> (dict,dict):
@@ -35,4 +36,4 @@ def initSimulation(simulation: Simulation) -> None:
 def checkResources(resourceData: dict) -> [Resource]:
     return ResourceService.createFromData(resourceData)
 
-start()
+#start()
