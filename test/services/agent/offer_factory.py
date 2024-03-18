@@ -8,20 +8,7 @@ from decimal import Decimal
 
 def create(agent: Agent, resource: Resource, amount: int, offerPrice: Decimal):
     period = agent.market.period_set.order_by('periodNumber').last()
-    offer = Offer(period=period, agent=agent, resource=resource, amount=amount, offerPrice=offerPrice)
+    offer = Offer(period=period, agent=agent, resource=resource, amount=amount, offerPrice=offerPrice, acceptance=False, acceptancePrice = 0, acceptanceAmount=0)
     offer.save()
     return  offer
 
-'''
-# OFFER
-class Offer(Base):
-    period = models.ForeignKey(Period, on_delete=models.CASCADE, null=False)
-    agent = models.ForeignKey(Agent, on_delete=models.CASCADE, null=False)
-    resource = models.ForeignKey(Resource, on_delete=models.CASCADE, null=False)
-    amount = models.IntegerField()
-    offerPrice = models.DecimalField(decimal_places=2, max_digits=7)
-    acceptance = models.BooleanField()
-    acceptancePrice = models.DecimalField(decimal_places=2, max_digits=7)
-    acceptanceAmount = models.IntegerField()
-
-'''

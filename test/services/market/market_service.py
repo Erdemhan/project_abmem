@@ -30,13 +30,13 @@ def startPool(market: Market) -> None:
     return ParallelService.startPool(agents)
 
 def marketClearing(market: Market, offers: [Offer], demand: int) :
+    # 2 farklı ajan aynı fiyattan teklif verdi ve teklifler talepten fazlaysa ikisini de eşit oranda kabul etmeli
     market.state = MarketState.CALCULATING
     market.save()
     metDemand = demand
     offers = sorted(offers, key=lambda x: x.offerPrice)
     for i in range(len(offers)):
         offer = offers[i]
-        offer.acceptance = False
         if demand > 0:
             if offer.amount < demand:
                 offer.acceptanceAmount = offer.amount
@@ -46,6 +46,7 @@ def marketClearing(market: Market, offers: [Offer], demand: int) :
             else:
                 offer.acceptanceAmount = demand
                 offer.acceptance = True
+                offer.acceptancePrice = offer.offerPrice
                 demand -= offer.acceptanceAmount # must be 0
         else:
             break
@@ -67,7 +68,9 @@ def saveOffers(market: Market, offers: [Offer], ptf: Decimal) -> None:
     market.state = MarketState.BROADCASTING
     for offer in offers:
         offer.save()
-    pass
+        agent = offer.agent
+        agent.budget += offer.acceptancePrice
+        agent.save()
 
 def createPeriod(market: Market) -> Period:
     return PeriodFactory.create(market= market, num= market.simulation.currentPeriod, demand= getDemand())
@@ -84,6 +87,10 @@ def createAgents(market: Market, agentData: dict):
     return agents
 
 def showPeriodDetails(period: Period) -> None:
+    offers = period.offer_set.all()
+    for offer in offers:
+        print("Agent: ", offer.agent.id, "Resource: ",offer.resource.name,offer.amount,"MW/h        ",
+               offer.offerPrice,"$      ", offer.acceptance," ", offer.acceptancePrice,"$   ",offer.acceptanceAmount,"/",offer.amount,"MW/h")
     VisualizationService.visualizePeriod(period)
 
 def run(market: Market) -> bool:

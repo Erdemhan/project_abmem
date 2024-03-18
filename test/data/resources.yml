@@ -10,4 +10,13 @@ resources:
   - name: uranium
     energytype: NUCLEAR
     fuelcost: 100
+    emission: 0
+  - name: naturalgas
+    energytype: FOSSIL
+    fuelcost: 100
     emission: 0 
+  - name: wind
+    energytype: RENEWABLE
+    fuelcost: 0
+    emission: 0 
+

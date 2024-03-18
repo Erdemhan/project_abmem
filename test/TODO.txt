@@ -30,6 +30,8 @@ Talep hesaplaması? statik talep ?
 ai model integration
 agent: predict relearn calculate
 market: ptf algorithm, offer acceptance
+Şirket kar maximizasyonu / optişmizasyon algoritması(matematiksel modeller)
+equiliubrum 
 
 D
 --

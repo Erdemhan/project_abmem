@@ -6,8 +6,15 @@ agents:
         capacity: 100
       - resource: uranium
         capacity: 1000
+  - agenttype: HYBRID
+    budget: 100
+    portfolio:
+      - resource: wind
+        capacity: 200
+      - resource: naturalgas
+        capacity: 650
   - agenttype: FOSSIL
-    budget: 900
+    budget: 100
     portfolio:
       - resource: coal
         capacity: 900

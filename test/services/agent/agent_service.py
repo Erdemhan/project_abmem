@@ -47,7 +47,7 @@ def run(agent: Agent) -> bool:
     if agent.state == AgentState.CREATED:
         print("entered to agent init in run")
         agent.__init__()
-    print("entered to agent run")
+    print(agent.id, " entered to agent run. Budget: ", agent.budget)
     agent.state = AgentState.RUNNING
     agent.save()
     relearn(agent,results=0)
