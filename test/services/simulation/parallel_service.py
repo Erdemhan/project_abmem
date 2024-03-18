@@ -16,6 +16,7 @@ import timeit
 
 def startPool(agents: [Agent]) -> [Agent]:
     with multiprocessing.Pool() as pool:
-        pool.map(AgentService.run,agents)
+        offers = pool.map(AgentService.run,agents)
     pool.join()
     pool.terminate()
+    return offers

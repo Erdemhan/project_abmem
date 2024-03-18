@@ -8,7 +8,7 @@ from decimal import Decimal
 
 def create(agent: Agent, resource: Resource, amount: int, offerPrice: Decimal):
     period = agent.market.period_set.order_by('periodNumber').last()
-    offer = Offer(period=period, agent=agent, amount=amount, offerPrice=offerPrice)
+    offer = Offer(period=period, agent=agent, resource=resource, amount=amount, offerPrice=offerPrice)
     offer.save()
     return  offer
 

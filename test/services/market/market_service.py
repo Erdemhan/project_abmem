@@ -10,7 +10,7 @@ from services.agent import agent_factory as AgentFactory
 from services.simulation import parallel_service as ParallelService
 from services.file_reader import reader_service as ReaderService
 from constants import *
-
+import numpy as np
 
 def init(market: Market) -> None:
     market.state = MarketState.INITIALIZED
@@ -27,34 +27,46 @@ def startPool(market: Market) -> None:
     market.state = MarketState.WAITINGAGENTS
     market.save()
     agents = market.agent_set.all()
-    ParallelService.startPool(agents)
-    print("pool finished")
-    pass
+    return ParallelService.startPool(agents)
 
-def marketAlgorithm(market: Market, offers: [Offer]) :
+def marketClearing(market: Market, offers: [Offer], demand: int) :
     market.state = MarketState.CALCULATING
-    # Market Algorithm / Calculate PTF
     market.save()
-    pass
-    return 1,2
+    metDemand = demand
+    offers = sorted(offers, key=lambda x: x.offerPrice)
+    for i in range(len(offers)):
+        offer = offers[i]
+        offer.acceptance = False
+        if demand > 0:
+            if offer.amount < demand:
+                offer.acceptanceAmount = offer.amount
+                offer.acceptance = True
+                offer.acceptancePrice = offer.offerPrice
+                demand -= offer.acceptanceAmount
+            else:
+                offer.acceptanceAmount = demand
+                offer.acceptance = True
+                demand -= offer.acceptanceAmount # must be 0
+        else:
+            break
+        i += 1
+    return offers,metDemand-demand
 
-def marketClearing(market: Market, offers: [Offer], ptf: Decimal):
+def ptfCalculation(market: Market, offers: [Offer], demand):
     market.state = MarketState.MARKETCLEARING
     # Market Clearing
     market.save()
     pass
     return 1,2
 
-def updatePeriod(period:Period, offers: [Offer], ptf: Decimal) -> Period:
-    # update period
-    pass
+def updatePeriod(period:Period, ptf: Decimal) -> Period:
+    period.save()
     return period
 
 def saveOffers(market: Market, offers: [Offer], ptf: Decimal) -> None:
     market.state = MarketState.BROADCASTING
-    #for offer in offers:
-        #offer.save()
-    market.save()
+    for offer in offers:
+        offer.save()
     pass
 
 def createPeriod(market: Market) -> Period:
@@ -80,15 +92,18 @@ def run(market: Market) -> bool:
         init(market)
 
     period = createPeriod(market)
+    demand = getDemand()
     offers = startPool(market)
-    offers,ptf = marketAlgorithm(market,offers)
-    offers = marketClearing(market,offers,ptf)
-    #debug
-    period.metDemand = -1
-    #debug
-    period = updatePeriod(period=period,offers=offers,ptf=ptf)
-    print(" funcs called and period updated")
+    offers = np.concatenate(offers)
+
+    ptf = ptfCalculation(market,offers,demand)
+    offers,metDemand = marketClearing(market,offers,demand)
+
+    period.metDemand = metDemand
+    period = updatePeriod(period=period, ptf=ptf)
     saveOffers(market,offers,ptf)
+    print(" funcs called and period updated")
+
     market.state = MarketState.PERIODEND
     market.save()
     print("period details will be shown")
@@ -96,4 +111,4 @@ def run(market: Market) -> bool:
     return True
 
 def getDemand() -> int:
-    return 100
+    return 1630

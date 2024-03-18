@@ -1,12 +1,15 @@
-pzt:
+
 mevcut durum analiz edilip nerede kaldık ne yapacağız neyimiz eksik değerlendirildi.
 
-Postgres'e geçirildi.
+SQLite yeterli paralel yazmayı kaldıramadığı için Postgres'e geçirildi.
 ParallelService startpool yazıldı
 Simulationservice marketservice ve agentservice run ları çalışır hale getirildi
 servislerin tümü birbirine bağlandı.
 
-salı:
 
-crs:
+Ajanlar markete teklif verebiliyor. Güncelde tüm tesisleri için maksimum kapasitede 1,200 arası rastgele teklif veriyor.
+Market teklifleri kabul edip kaydediyor. Güncelde tüm teklifler fiyata göre sıralanarak talep kadarı teklif fiyatından kabul ediliyor.
+
+tahmin ve öğrenme ile ilgili araştırmalar
+
 

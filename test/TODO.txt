@@ -2,16 +2,15 @@ WAW:
 Şuan verileri okuyor
 modelleri oluşturuyor ve veritabanına kaydediyor
 kaynakları kontrol ediyor eğer veritabanında yoksa yeni kaynak oluşturuyor varsa es geçiyor
-tahmin market clearing vs fonksiyonları boş bir şekilde tüm simulasyonu adım adım tamamlıyor.
-simulasyon çalışıyor agent ve marketin E deki fonksiyonlarının implementasyonları kaldı
+Ajanlar markete teklif verebiliyor. Güncelde tüm tesisleri için maksimum kapasitede 1,200 arası rastgele teklif veriyor.
+Market teklifleri kabul edip kaydediyor. Güncelde tüm teklifler fiyata göre sıralanarak talep kadarı teklif fiyatından kabul ediliyor.
+
 
 
 TODO:
 E
 --------
-agentservice.run (predict relearn vs)
-marketservice.run (market clearing vs)
-Tahmin fonksiyonunu araştır
+Öğrenme fonksiyonunu araştır
 
 E+
 --
@@ -27,6 +26,18 @@ web ui
 
 EL
 --
+Talep hesaplaması? statik talep ?
 ai model integration
+agent: predict relearn calculate
+market: ptf algorithm, offer acceptance
+
+D
+--
+çalıştırılabilir paket haline getir
+dökümantasyon
+
+M
+--
+
 
 

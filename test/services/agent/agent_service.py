@@ -53,7 +53,7 @@ def run(agent: Agent) -> bool:
     relearn(agent,results=0)
     prediction = predict(agent,results=0)
     offers = calculateOffers(agent,prediction)
-    saveOffers(agent,offers)
+    saveOffers(offers)
     agent.state = AgentState.WAITING
     agent.save()
-    print(offers[1].amount,offers[1].offerPrice)
+    return offers
