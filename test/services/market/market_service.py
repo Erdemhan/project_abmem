@@ -11,12 +11,11 @@ from services.simulation import parallel_service as ParallelService
 from services.file_reader import reader_service as ReaderService
 from constants import *
 import numpy as np
+import decimal
+import timeit
 
 def init(market: Market) -> None:
     market.state = MarketState.INITIALIZED
-    if market.strategy == MarketStrategy.DAYAHEAD:
-        # Placeholder for future development
-        pass
     agentData = readAgentData()
     agents = createAgents(market,agentData)
     for agentData,agent in zip(agentData,agents):
@@ -29,38 +28,65 @@ def startPool(market: Market) -> None:
     agents = market.agent_set.all()
     return ParallelService.startPool(agents)
 
-def marketClearing(market: Market, offers: [Offer], demand: int) :
-    # 2 farklı ajan aynı fiyattan teklif verdi ve teklifler talepten fazlaysa ikisini de eşit oranda kabul etmeli
+from collections import defaultdict
+
+def marketClearing(market: Market, offers: [Offer], demand: int):
     market.state = MarketState.CALCULATING
     market.save()
     metDemand = demand
-    offers = sorted(offers, key=lambda x: x.offerPrice)
-    for i in range(len(offers)):
-        offer = offers[i]
+    ptf = 0
+    
+    # Fiyatlara göre teklifleri grupla
+    offer_groups = defaultdict(list)
+    for offer in offers:
+        offer_groups[offer.offerPrice].append(offer)
+    
+    # Fiyat gruplarını fiyatlarına göre sırala
+    sorted_groups = sorted(offer_groups.items(), key=lambda x: x[0])
+
+    for _, group in sorted_groups:
         if demand > 0:
-            if offer.amount < demand:
-                offer.acceptanceAmount = offer.amount
-                offer.acceptance = True
-                offer.acceptancePrice = offer.offerPrice
-                demand -= offer.acceptanceAmount
+            total_amount = sum(offer.amount for offer in group)
+            # Grubun toplam miktarı talebi karşılıyorsa
+            if total_amount <= demand:
+                for offer in group:
+                    offer.acceptanceAmount = offer.amount
+                    offer.acceptance = True
+                    offer.acceptancePrice = offer.offerPrice
+                    demand -= offer.acceptanceAmount
+                    ptf = offer.acceptancePrice
             else:
-                offer.acceptanceAmount = demand
-                offer.acceptance = True
-                offer.acceptancePrice = offer.offerPrice
-                demand -= offer.acceptanceAmount # must be 0
+                ptf = priceGroupCalculation(group,demand)
+                break
         else:
             break
-        i += 1
-    return offers,metDemand-demand
+    
+    return offers, metDemand - demand,ptf
 
-def ptfCalculation(market: Market, offers: [Offer], demand):
-    market.state = MarketState.MARKETCLEARING
-    # Market Clearing
-    market.save()
-    pass
-    return 1,2
+def priceGroupCalculation(group: [Offer], demand: int):
+    #RECURSIVE
+    ptf = 0
+    if len(group) <=0 or demand <=0:
+        return 0
+    gDemand = demand / len(group)
+    for offer in group:
+        if offer.amount <= gDemand:
+            offer.acceptanceAmount = offer.amount
+            offer.acceptance = True
+            offer.acceptancePrice = offer.offerPrice
+            demand -= offer.acceptanceAmount
+            group.remove(offer)
+            ptf = priceGroupCalculation(group=group, demand=demand)
+            break
+        else:
+            offer.acceptanceAmount = gDemand
+            demand -= offer.acceptanceAmount
+            offer.acceptance = True
+            offer.acceptancePrice = offer.offerPrice
+            ptf = offer.offerPrice
+    return ptf
 
-def updatePeriod(period:Period, ptf: Decimal) -> Period:
+def updatePeriod(period:Period) -> Period:
     period.save()
     return period
 
@@ -69,8 +95,11 @@ def saveOffers(market: Market, offers: [Offer], ptf: Decimal) -> None:
     for offer in offers:
         offer.save()
         agent = offer.agent
-        agent.budget += offer.acceptancePrice
+        agent.budget += budgetCalculation(offer)
         agent.save()
+
+def budgetCalculation(offer: Offer):
+    return  decimal.Decimal((offer.acceptanceAmount * offer.acceptancePrice)) - (offer.resource.fuelCost * decimal.Decimal(offer.acceptanceAmount))
 
 def createPeriod(market: Market) -> Period:
     return PeriodFactory.create(market= market, num= market.simulation.currentPeriod, demand= getDemand())
@@ -87,13 +116,22 @@ def createAgents(market: Market, agentData: dict):
     return agents
 
 def showPeriodDetails(period: Period) -> None:
+    print("PTF: ", period.ptf)
     offers = period.offer_set.all()
     for offer in offers:
         print("Agent: ", offer.agent.id, "Resource: ",offer.resource.name,offer.amount,"MW/h        ",
                offer.offerPrice,"$      ", offer.acceptance," ", offer.acceptancePrice,"$   ",offer.acceptanceAmount,"/",offer.amount,"MW/h")
     VisualizationService.visualizePeriod(period)
 
+def payasptf(offers: [Offer], ptf: int):
+    for offer in offers:
+        if offer.acceptance:
+            offer.acceptancePrice = ptf
+    return offers
+
 def run(market: Market) -> bool:
+    start = timeit.default_timer()
+    
     if market.state == MarketState.CREATED:
         print("market inited in market service")
         init(market)
@@ -103,11 +141,12 @@ def run(market: Market) -> bool:
     offers = startPool(market)
     offers = np.concatenate(offers)
 
-    ptf = ptfCalculation(market,offers,demand)
-    offers,metDemand = marketClearing(market,offers,demand)
+    offers,metDemand,ptf = marketClearing(market,offers,demand)
+    if market.strategy == MarketStrategy.PAYASPTF:
+        payasptf(offers,ptf)
 
-    period.metDemand = metDemand
-    period = updatePeriod(period=period, ptf=ptf)
+    period.metDemand, period.ptf = metDemand, ptf
+    period = updatePeriod(period=period)
     saveOffers(market,offers,ptf)
     print(" funcs called and period updated")
 
@@ -115,6 +154,7 @@ def run(market: Market) -> bool:
     market.save()
     print("period details will be shown")
     showPeriodDetails(period)
+    print(timeit.default_timer() - start)
     return True
 
 def getDemand() -> int:

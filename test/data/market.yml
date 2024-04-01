@@ -1,5 +1,5 @@
 market:
   lowerbound: 10
   upperbound: 1000
-  strategy: DAYAHEAD
+  strategy: PAYASPTF
   

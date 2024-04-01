@@ -30,7 +30,8 @@ class SimulationMode(enum.Enum):
 
 
 class MarketStrategy(enum.Enum):
-    DAYAHEAD = 0
+    PAYASBID = 0
+    PAYASPTF = 1
 
 
 class MarketState(enum.Enum):

@@ -10,16 +10,13 @@ Market teklifleri kabul edip kaydediyor. Güncelde tüm teklifler fiyata göre s
 TODO:
 E
 --------
-Öğrenme fonksiyonunu araştır
+# Öğrenme fonksiyonunu araştır
 
 E+
 --
-errorservice
-logger
+errorservice +
+logger +
 VisualizationService
-
-E++
---
 web endpoints/services
 web ui
 
@@ -29,7 +26,7 @@ EL
 Talep hesaplaması? statik talep ?
 ai model integration
 agent: predict relearn calculate
-market: ptf algorithm, offer acceptance
+market: ptf algorithm, offer acceptance +
 Şirket kar maximizasyonu / optişmizasyon algoritması(matematiksel modeller)
 equiliubrum 
 

@@ -1,0 +1,8 @@
+
+abdirasak ve bengisu'ya işleri verildi, bilgisayarlarına kurulumlar yapıldı.
+
+market clearing ortak fiyatlı tekliflere talebi bölüştürecek ve ptf'yi belirleyecek şekilde düzenlendi.
+ajanların bütçe hesaplaması eklendi
+
+error_service logger not completed
+

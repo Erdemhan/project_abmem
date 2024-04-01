@@ -7,6 +7,7 @@ from services.market import market_factory as MarketFactory
 from services.market import market_service as MarketService
 from services.visualization import visualization_service as VisualizationService
 from constants import *
+import timeit
 
 
 def init(simulation: Simulation):
@@ -33,6 +34,7 @@ def readMarketData() -> dict:
 
 def run(simulation: Simulation) -> bool:
     isOk = True
+    start = timeit.default_timer()
     if simulation.market.state == MarketState.CREATED:
         simulation.market.init()
         print("market inited")
@@ -40,6 +42,7 @@ def run(simulation: Simulation) -> bool:
         print("market run start")
         MarketService.run(simulation.market)
         simulation.currentPeriod += 1
+        simulation.state = SimulationState.STARTED
         simulation.save()
         if simulation.mode == SimulationMode.ONLYRESULT:
             print("mode onlyresult" , simulation.mode)
@@ -50,6 +53,7 @@ def run(simulation: Simulation) -> bool:
             pass
     print("sim viz")
     VisualizationService.visulaizeSimulation(simulation.market.period_set.all())
+    #print("T: " , timeit.default_timer() - start)
     return isOk
 
 

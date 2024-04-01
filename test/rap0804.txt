@@ -1,0 +1,1 @@
+pzt: payasptf modu eklendi, errorservice/logger completed - error/log check not completed.

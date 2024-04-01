@@ -11,3 +11,6 @@ def resourceCreatedString(name: str, id: int) -> str:
 
 def resourcesCreationReportString(dataLenght: int, creationLength: int) -> str:
     return str(creationLength) + " Resources created " + str(dataLenght - creationLength) + " Resources already exists."
+
+def resourceNotFoundString(resourceName: str):
+    return "ResourceNotFoundError: Resource '" + resourceName + "' in agents.yml not found. Make sure it is included in resources.yml"

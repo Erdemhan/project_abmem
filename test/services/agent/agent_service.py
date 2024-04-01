@@ -22,14 +22,16 @@ def predict(agent: Agent, results) -> int:
     agent.state = AgentState.PREDICTING
     agent.save()
     # Prediction Module
-    return random.randint(1,200)
+    return random.randint(10,1000)
 
 def calculateOffers(agent: Agent, prediction: int) -> [Offer]:
     agent.state = AgentState.CALCULATING
     agent.save()
     offers = []
+
     for plant in agent.portfolio.plant_set.all():
-        offer = OfferFactory.create(agent=agent, resource=plant.resource, amount=plant.capacity, offerPrice=prediction)
+        lowerBound = plant.resource.fuelCost
+        offer = OfferFactory.create(agent=agent, resource=plant.resource, amount=plant.capacity, offerPrice=random.randint(lowerBound,250))
         offers.append(offer)
     # Offer Module
     return offers

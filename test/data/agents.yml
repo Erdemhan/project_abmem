@@ -2,7 +2,7 @@ agents:
   - agenttype: HYBRID
     budget: 100
     portfolio:
-      - resource: coal
+      - resource: coalt
         capacity: 100
       - resource: uranium
         capacity: 1000
